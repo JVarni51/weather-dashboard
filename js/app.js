@@ -1,5 +1,6 @@
 // Weather Dashboard JavaScript
-const API_KEY = 'a35cb639a9059ccec17a358be3452f36'; // <-- Replace with your actual API key
+const API_KEY = 'a35cb639a9059ccec17a358be3452f36'; // Your OpenWeatherMap API key
+
 const cityInput = document.getElementById('city-input');
 const searchBtn = document.getElementById('search-btn');
 const locationBtn = document.getElementById('location-btn');
@@ -12,12 +13,22 @@ async function searchWeather() {
     const city = cityInput.value.trim();
     if (!city) return;
 
+    showLoading();
+
     try {
         const response = await fetch(
             `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${API_KEY}&units=metric`
         );
 
-        if (!response.ok) throw new Error('City not found');
+        if (!response.ok) {
+            if (response.status === 401) {
+                throw new Error('Invalid API key. Please check your key.');
+            } else if (response.status === 404) {
+                throw new Error('City not found. Please check the city name.');
+            } else {
+                throw new Error('Failed to fetch weather data.');
+            }
+        }
 
         const data = await response.json();
         displayCurrentWeather(data);
@@ -38,6 +49,8 @@ async function getUserLocation() {
         return;
     }
 
+    showLoading();
+
     navigator.geolocation.getCurrentPosition(async (position) => {
         const { latitude, longitude } = position.coords;
         
@@ -45,17 +58,21 @@ async function getUserLocation() {
             const response = await fetch(
                 `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}&units=metric`
             );
+
+            if (!response.ok) throw new Error('Unable to fetch weather for your location');
+
             const data = await response.json();
             displayCurrentWeather(data);
             await getForecast(latitude, longitude);
 
             currentWeather.classList.remove('hidden');
             forecasts.classList.remove('hidden');
+            errorMessage.classList.add('hidden');
         } catch (error) {
-            showError('Unable to fetch weather for your location');
+            showError(error.message);
         }
     }, () => {
-        showError('Unable to get your location');
+        showError('Unable to get your location. Please allow location access.');
     });
 }
 
@@ -77,10 +94,13 @@ async function getForecast(lat, lon) {
         );
         const data = await response.json();
 
+        if (!response.ok) throw new Error('Failed to load forecast');
+
         displayHourlyForecast(data.list);
         displayDailyForecast(data.list);
     } catch (error) {
         console.error('Forecast error:', error);
+        // Still show current weather even if forecast fails
     }
 }
 
@@ -89,7 +109,6 @@ function displayHourlyForecast(list) {
     const container = document.getElementById('hourly-forecast');
     container.innerHTML = '';
 
-    // Show next 8 entries (~24 hours)
     list.slice(0, 8).forEach(item => {
         const time = new Date(item.dt * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         const temp = Math.round(item.main.temp);
@@ -99,14 +118,14 @@ function displayHourlyForecast(list) {
         card.className = 'forecast-card';
         card.innerHTML = `
             <div>${time}</div>
-            <img src="https://openweathermap.org/img/wn/${icon}.png" alt="">
+            <img src="https://openweathermap.org/img/wn/${icon}.png" alt="weather icon">
             <div><strong>${temp}°C</strong></div>
         `;
         container.appendChild(card);
     });
 }
 
-// Display daily forecast (simplified)
+// Display daily forecast
 function displayDailyForecast(list) {
     const container = document.getElementById('daily-forecast');
     container.innerHTML = '';
@@ -114,9 +133,9 @@ function displayDailyForecast(list) {
     const dailyData = {};
 
     list.forEach(item => {
-        const date = new Date(item.dt * 1000).toLocaleDateString();
-        if (!dailyData[date]) {
-            dailyData[date] = item;
+        const dateKey = new Date(item.dt * 1000).toLocaleDateString();
+        if (!dailyData[dateKey]) {
+            dailyData[dateKey] = item;
         }
     });
 
@@ -129,7 +148,7 @@ function displayDailyForecast(list) {
         card.className = 'forecast-card';
         card.innerHTML = `
             <div>${date}</div>
-            <img src="https://openweathermap.org/img/wn/${icon}.png" alt="">
+            <img src="https://openweathermap.org/img/wn/${icon}.png" alt="weather icon">
             <div><strong>${temp}°C</strong></div>
         `;
         container.appendChild(card);
@@ -143,6 +162,11 @@ function showError(message) {
     forecasts.classList.add('hidden');
 }
 
+function showLoading() {
+    errorMessage.textContent = 'Loading...';
+    errorMessage.classList.remove('hidden');
+}
+
 // Event Listeners
 searchBtn.addEventListener('click', searchWeather);
 cityInput.addEventListener('keypress', (e) => {
@@ -150,9 +174,9 @@ cityInput.addEventListener('keypress', (e) => {
 });
 locationBtn.addEventListener('click', getUserLocation);
 
-// Optional: Load default city on start
+// Auto-load a default city for testing
 window.onload = () => {
-    // You can uncomment the line below to load a default city
+    // Uncomment the next two lines if you want it to load a city automatically
     // cityInput.value = 'San Francisco';
     // searchWeather();
 };
