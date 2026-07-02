@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Weather Dashboard</h1>
+            <div class="search-container">
+                <input type="text" id="city-input" placeholder="Enter city name (e.g., San Francisco)">
+                <button id="search-btn">Search</button>
+                <button id="location-btn">Use My Location</button>
+            </div>
+        </header>
+
+        <!-- Current Weather -->
+        <div id="current-weather" class="current-weather hidden">
+            <div class="weather-main">
+                <div>
+                    <h2 id="city-name"></h2>
+                    <p id="weather-description"></p>
+                </div>
+                <div class="temp-container">
+                    <span id="temperature"></span>
+                    <span class="unit">°C</span>
+                </div>
+            </div>
+            <div class="weather-details">
+                <div class="detail">
+                    <span>Feels like</span>
+                    <span id="feels-like"></span>
+                </div>
+                <div class="detail">
+                    <span>Humidity</span>
+                    <span id="humidity"></span>
+                </div>
+                <div class="detail">
+                    <span>Wind</span>
+                    <span id="wind"></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Forecast Sections -->
+        <div id="forecasts" class="forecasts hidden">
+            <div class="forecast-section">
+                <h3>Hourly Forecast</h3>
+                <div id="hourly-forecast" class="hourly-forecast"></div>
+            </div>
+
+            <div class="forecast-section">
+                <h3>7-Day Forecast</h3>
+                <div id="daily-forecast" class="daily-forecast"></div>
+            </div>
+        </div>
+
+        <div id="error-message" class="error hidden"></div>
+    </div>
+
+    <script src="js/app.js"></script>
+</body>
+</html>
