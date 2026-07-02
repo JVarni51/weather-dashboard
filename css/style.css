@@ -1,0 +1,137 @@
+/* Weather Dashboard Styles */
+:root {
+    --primary: #2563eb;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: #f1f5f9;
+    min-height: 100vh;
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+h1 {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.search-container {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+#city-input {
+    padding: 0.75rem 1rem;
+    border: 2px solid #475569;
+    border-radius: 8px;
+    background: #1e293b;
+    color: white;
+    width: 300px;
+    font-size: 1rem;
+}
+
+button {
+    padding: 0.75rem 1.5rem;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #1e40af;
+}
+
+/* Current Weather */
+.current-weather {
+    background: #1e293b;
+    border-radius: 16px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+.weather-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.temp-container {
+    text-align: right;
+}
+
+#temperature {
+    font-size: 4rem;
+    font-weight: 700;
+}
+
+.weather-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+}
+
+.detail {
+    background: #334155;
+    padding: 1rem;
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* Forecasts */
+.forecasts {
+    display: grid;
+    gap: 2rem;
+}
+
+.forecast-section h3 {
+    margin-bottom: 1rem;
+    color: #94a3b8;
+}
+
+.hourly-forecast, .daily-forecast {
+    display: flex;
+    gap: 1rem;
+    overflow-x: auto;
+    padding-bottom: 1rem;
+}
+
+.forecast-card {
+    background: #1e293b;
+    border-radius: 12px;
+    padding: 1rem;
+    min-width: 100px;
+    text-align: center;
+}
+
+.hidden {
+    display: none;
+}
+
+.error {
+    color: #ef4444;
+    text-align: center;
+    margin-top: 1rem;
+}
