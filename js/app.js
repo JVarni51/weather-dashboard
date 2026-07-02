@@ -1,5 +1,5 @@
 // Weather Dashboard JavaScript
-const API_KEY = 'YOUR_OPENWEATHERMAP_API_KEY'; // <-- Replace with your actual API key
+const API_KEY = a35cb639a9059ccec17a358be3452f36; // <-- Replace with your actual API key
 
 const cityInput = document.getElementById('city-input');
 const searchBtn = document.getElementById('search-btn');
